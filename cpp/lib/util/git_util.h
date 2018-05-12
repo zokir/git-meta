@@ -3,11 +3,25 @@
 
 #include <string>
 
+#include <boost/filesystem.hpp>
+
 namespace qmeta {
 namespace lib {
 namespace util {
 
-std::string getContainingGitDir(std::string const& sourceDir) {
+boost::filesystem::path getContainingGitDir(boost::filesystem::path const& sourceDir) {
+    using namespace boost::filesystem;
+    path const gitDir = sourceDir / ".git";
+    if (is_directory(gitDir)) {
+        return sourceDir;
+    }
+
+    path const parentPath = sourceDir.parent_path();
+    if (parentPath.empty() || "/" == parentPath) {
+        throw "Not in git dir"; // create NotInGitRoot exception type
+    }
+
+    return getContainingGitDir(parentPath);
 }
 
 /**
@@ -19,6 +33,7 @@ std::string getContainingGitDir(std::string const& sourceDir) {
  * @param {String} dir
  * @return {String}
  */
+ /*
 function getContainingGitDir(dir) {
     const gitDir = path.join(dir, ".git");
     if (fs.existsSync(gitDir) && fs.statSync(gitDir).isDirectory()) {
@@ -33,6 +48,7 @@ function getContainingGitDir(dir) {
 
     return getContainingGitDir(base);
 }
+*/
 
 } // cose namespace util
 } // close namespace lib
