@@ -1,5 +1,5 @@
-#ifndef LIB_CORE_ERROR_H
-#define LIB_CORE_ERROR_H
+#ifndef LIB_CORE_ERROR_HPP
+#define LIB_CORE_ERROR_HPP
 
 #include <exception>
 

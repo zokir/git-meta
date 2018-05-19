@@ -1,5 +1,5 @@
-#include <lib/util/git_util.h>
-#include <lib/core/error.h>
+#include <lib/util/git_util.hpp>
+#include <lib/core/error.hpp>
 
 namespace {
 

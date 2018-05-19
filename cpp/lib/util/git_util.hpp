@@ -1,5 +1,5 @@
-#ifndef LIB_UTIL_GIT_UTIL_H
-#define LIB_UTIL_GIT_UTIL_H
+#ifndef LIB_UTIL_GIT_UTIL_HPP
+#define LIB_UTIL_GIT_UTIL_HPP
 
 #include <sys/stat.h>
 #include <string>
@@ -21,4 +21,4 @@ boost::filesystem::path getContainingGitDir(boost::filesystem::path const& sourc
 } // close namespace lib
 } // close namespace qmeta
 
-#endif
+#endif // LIB_UTIL_GIT_UTIL_HPP

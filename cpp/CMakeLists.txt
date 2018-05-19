@@ -12,17 +12,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Boost 1.56 REQUIRED COMPONENTS filesystem system program_options)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
 
 add_subdirectory(lib/core)
 add_subdirectory(lib/util)
+add_subdirectory(lib/cmd)
 
 set(target qmeta) # create variable target
 add_executable(${target} qmeta.cpp)
 
-if(Boost_FOUND)
-    target_link_libraries(${target} ${Boost_LIBRARIES})
-endif()
-
-target_link_libraries(${target} util core)
+target_link_libraries(${target} ${Boost_LIBRARIES} cmd util core)
 
 install(TARGETS ${target} DESTINATION bin)
