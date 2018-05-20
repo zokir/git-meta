@@ -1,13 +1,20 @@
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-#include <boost/program_options.hpp>
-
 #include <lib/core/error.hpp>
 #include <lib/cmd/root.hpp>
 
-std::vector<std::string> const availableCommands = {"root"};
+#include <boost/program_options.hpp>
+
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <unordered_map>
+#include <memory>
+#include <string>
+
+std::unordered_map<std::string, std::shared_ptr<qmeta::lib::cmd::Command>>
+ availableCommands = {
+       {std::string("root"), std::make_shared<qmeta::lib::cmd::Root>() },
+        };
+
 int const commandPos = 1;
 
 int handleSupportedCommands(int argc, char *argv[]) {
@@ -40,25 +47,21 @@ int handleSupportedCommands(int argc, char *argv[]) {
       return 0;
     }
 
-    std::string cmd = vm["command"].as<std::string>();
-
+    std::string const cmd = vm["command"].as<std::string>();
     // Collect all the unrecognized options from the first pass. This will
     // include the (positional) command name, so we need to erase that.
     std::vector<std::string> opts =
         po::collect_unrecognized(parsed.options, po::include_positional);
     opts.erase(opts.begin());
 
-    if (vm.count("help")) {
-        // [cmd]->printHelp
-    }
-
-    if (cmd == "root") {
-        qmeta::lib::cmd::Root rootCmd;
-        if (vm.count("help")) {
-            rootCmd.printHelp();
-        } else {
-            rootCmd.execute(opts);
-        }
+    auto const& cmdPtr = availableCommands[cmd];
+    if (vm.count("help") && cmdPtr) {
+        cmdPtr->printHelp();
+    } else if (cmdPtr) {
+        cmdPtr->execute(opts);
+    } else {
+        // we should prob never get here.
+        std::cerr << "Command not found: " << cmd << std::endl;
     }
 
   } catch (qmeta::lib::core::NotInGitRepoError const &exception) {
@@ -73,13 +76,10 @@ int handleSupportedCommands(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-  return handleSupportedCommands(argc, argv);
-  // Complete yolo for now, prob switch to boost to parse args.
   if (argc < 2) {
-    return system("git-meta");
-  } else if (std::find(availableCommands.cbegin(), availableCommands.cend(),
-                       (argv[commandPos])) != availableCommands.cend()) {
-    return handleSupportedCommands(argc, argv);
+        return system("git-meta");
+  } else if (availableCommands.count(argv[commandPos])) {
+        return handleSupportedCommands(argc, argv);
   } else {
     std::stringstream gitMetaCommand;
     gitMetaCommand << "git-meta";

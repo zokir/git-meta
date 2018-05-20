@@ -13,7 +13,7 @@ namespace qmeta {
 namespace lib {
 namespace cmd {
 
-class Root : Command {
+class Root : public Command {
     public:
         Root();
         void printHelp() const override;
