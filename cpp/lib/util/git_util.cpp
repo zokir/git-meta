@@ -52,3 +52,8 @@ qmeta::lib::util::getContainingGitDir(boost::filesystem::path const& sourceDir) 
     return getContainingGitDir(parentPath);
 }
 
+boost::filesystem::path qmeta::lib::util::getRootGitDir() {
+    return qmeta::lib::util::getContainingGitDir(
+              boost::filesystem::current_path());
+}
+

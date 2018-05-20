@@ -17,6 +17,8 @@ namespace util {
 // containing a `.git` directory.  If no such directory exists, throw 'NotInGitRepoError`.
 boost::filesystem::path getContainingGitDir(boost::filesystem::path const& sourceDir);
 
+boost::filesystem::path getRootGitDir();
+
 } // cose namespace util
 } // close namespace lib
 } // close namespace qmeta

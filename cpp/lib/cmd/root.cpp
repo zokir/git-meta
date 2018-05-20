@@ -33,9 +33,7 @@ void qmeta::lib::cmd::Root::execute(std::vector<std::string> const& options) con
       po::variables_map varMap;
       po::store(po::command_line_parser(options).options(m_optDesc).run(), varMap);
 
-      boost::filesystem::path const gitRootPath =
-          qmeta::lib::util::getContainingGitDir(
-              boost::filesystem::current_path());
+      boost::filesystem::path const gitRootPath = qmeta::lib::util::getRootGitDir();
 
       if (varMap.count("relative")) {
         std::cout << boost::filesystem::relative(
